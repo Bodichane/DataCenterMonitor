@@ -57,9 +57,4 @@ The response to this last request should be:
 `{“error”: “Abnormal temperature detected!”}`
 
 
-You can then view the measurement history with /datacenter/history and check the overall status of the system with /datacenter/status, without needing to provide any additional parameters.
-
-
-
-
-Translated with DeepL.com (free version)
+You can then view the measurement history with /datacenter/history and check the overall status of the system with /datacenter/status, without needing to provide any additional parameters
