@@ -1,0 +1,5 @@
+flask==2.2.5
+flasgger==0.9.5
+flask-cors==3.0.10
+scikit-learn==1.2.2
+numpy==1.24.4

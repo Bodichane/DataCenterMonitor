@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  datacenter:
+    build: .
+    container_name: datacenter_monitor
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./app.py:/app/app.py  
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
