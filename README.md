@@ -1,62 +1,65 @@
 # 🧠 DataCenter Monitor
 
-**DataCenter Monitor** est une API Flask permettant de surveiller la température des serveurs dans un datacenter.  
-Elle détecte les anomalies thermiques grâce à un modèle **Isolation Forest**, stocke les données dans une base **SQLite** et fournit une documentation interactive via **Swagger UI**.
+**DataCenter Monitor** is a Flask API that monitors the temperature of servers in a data center.  
+It detects thermal anomalies using an **Isolation Forest** model, stores data in an **SQLite** database, and provides interactive documentation via **Swagger UI**.
 
 ---
 
-## 🚀 Fonctionnalités
+## 🚀 Features
 
-- **API REST complète** avec Flask  
-- **Détection d’anomalies** via `scikit-learn`  
-- **Base de données SQLite** intégrée  
-- **Intégrité des données** vérifiée par empreinte SHA-256  
-- **Swagger UI** pour tester facilement les endpoints  
-- **Déploiement simplifié avec Docker**
+- **Complete REST API** with Flask  
+- **Anomaly detection** via `scikit-learn`  
+- Integrated **SQLite database**  
+- **Data integrity** verified by SHA-256 fingerprint  
+- **Swagger UI** for easy endpoint testing  
+- **Simplified deployment with Docker**
 
 ---
 
-## 🐳 Déploiement avec Docker
+## 🐳 Deployment with Docker
 ### Installation
 
-#### 1️⃣ Cloner le dépôt
+#### 1️⃣ Clone the repository
 ```bash
 git clone https://github.com/Bodichane/DataCenterMonitor.git
 cd DataCenterMonitor
 ```
-#### 2️⃣ Construire l’image Docker
+#### 2️⃣ Build the Docker image
 ```bash
 docker build -t datacentermonitor .
 docker run -p 8080:8080 datacentermonitor
 ```
 
-## 🌐 Utilisation
+## 🌐 Usage
 
-Dans la barre d'adresse du navigateur, saisissez http://localhost:8080/apidocs
-.
-À l'aide de l'interface graphique Swagger UI, lancez le processus de surveillance en sélectionnant la méthode REST API /datacenter/monitor et en saisissant les paramètres de test suivants :
+In the browser address bar, enter http://localhost:8080/apidocs.
 
-Paramètres de test :
+Using the Swagger UI graphical interface, start the monitoring process by selecting the REST API /datacenter/monitor method and entering the following test parameters:
+
+Test parameters:
 ```
 {
-  "server_id": 1,
-  "temperature": 45
+  “server_id”: 1,
+  “temperature”: 45
 }
 ```
 
-Pour tester la détection d’anomalie, utilisez :
+To test anomaly detection, use :
 ```
 {
-  "server_id": 1,
-  "temperature": 60
+  “server_id”: 1,
+  “temperature”: 60
 }
 ```
 
-Le retour de cette dernière requête devrait être :
+The response to this last request should be:
 
-`{"error": "Température anormale détectée!"}`
-
-
-Ensuite, vous pouvez consulter l’historique des mesures avec /datacenter/history et vérifier l’état général du système avec /datacenter/status, sans avoir besoin de fournir de paramètres supplémentaires.
+`{“error”: “Abnormal temperature detected!”}`
 
 
+You can then view the measurement history with /datacenter/history and check the overall status of the system with /datacenter/status, without needing to provide any additional parameters.
+
+
+
+
+Translated with DeepL.com (free version)
