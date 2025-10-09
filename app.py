@@ -13,26 +13,26 @@ from sklearn.ensemble import IsolationForest
 import numpy as np
 
 # ============================
-# CONFIGURATION GLOBALE
+# GLOBAL CONFIGURATION
 # ============================
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)  # ✅ Active CORS pour Swagger UI
+CORS(app)  # ✅ Enable CORS for Swagger UI
 
-# Configuration Swagger
+# Swagger configuration
 swagger_template = {
     "swagger": "2.0",
     "info": {
         "title": "DataCenter Monitor API",
-        "description": "API de surveillance du datacenter avec détection d’anomalies et historique",
+        "description": "Datacenter monitoring API with anomaly detection and history tracking",
         "version": "1.0.0"
     },
-    "host": "127.0.0.1:8080",  # ✅ Utiliser l’adresse locale pour Swagger
+    "host": "127.0.0.1:8080",  # ✅ Use local address for Swagger
     "basePath": "/",
-    "schemes": ["http", "https"],  # ✅ Compatible avec HTTP et HTTPS
+    "schemes": ["http", "https"],  # ✅ Compatible with HTTP and HTTPS
 }
 swagger = Swagger(app, template=swagger_template)
 
@@ -42,7 +42,7 @@ DB_PATH = os.path.join(DATA_DIR, "datacenter.db")
 JSON_PATH = os.path.join(DATA_DIR, "data.json")
 
 # ============================
-# FONCTIONS UTILITAIRES
+# UTILITY FUNCTIONS
 # ============================
 
 def simulate_temperature():
@@ -101,20 +101,20 @@ def detect_anomaly(temperatures):
 
 
 # ============================
-# INITIALISATION
+# INITIALIZATION
 # ============================
 
 init_db()
 seed_db()
 
 # ============================
-# ROUTES FLASK AVEC SWAGGER
+# FLASK ROUTES WITH SWAGGER
 # ============================
 
 @app.route("/datacenter/monitor", methods=["POST"])
 def monitor():
     """
-    Enregistre une température pour un serveur donné
+    Records a temperature for a given server
     ---
     tags:
       - Monitoring
@@ -133,9 +133,9 @@ def monitor():
               example: 45
     responses:
       200:
-        description: Données enregistrées avec succès
+        description: Data recorded successfully
       400:
-        description: Température anormale détectée
+        description: Anomalous temperature detected
     """
     data = request.get_json(force=True)
     server_id = data.get("server_id", 1)
@@ -145,7 +145,7 @@ def monitor():
     id = hashlib.md5(str(timestamp).encode()).hexdigest()
 
     if temp > 50:
-        return jsonify({"error": "Température anormale détectée!"}), 400
+        return jsonify({"error": "Anomalous temperature detected!"}), 400
 
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -155,7 +155,7 @@ def monitor():
 
     if detect_anomaly(recent_temps):
         conn.close()
-        return jsonify({"error": "Température anormale détectée!"}), 400
+        return jsonify({"error": "Anomalous temperature detected!"}), 400
 
     c.execute("INSERT INTO temperatures (id, server_id, temperature, timestamp) VALUES (?, ?, ?, ?)",
               (id, server_id, temp, timestamp))
@@ -165,7 +165,7 @@ def monitor():
     result = {"id": id, "server_id": server_id, "temperature": temp, "timestamp": timestamp}
     hash_value = save_data(result)
     if not check_integrity(hash_value):
-        return jsonify({"error": "Corruption des données détectée!"}), 400
+        return jsonify({"error": "Data corruption detected!"}), 400
 
     return jsonify(result), 200
 
@@ -173,13 +173,13 @@ def monitor():
 @app.route("/datacenter/history", methods=["GET"])
 def history():
     """
-    Retourne les 10 dernières mesures enregistrées
+    Returns the last 10 recorded measurements
     ---
     tags:
       - Monitoring
     responses:
       200:
-        description: Liste des mesures récentes
+        description: List of recent measurements
     """
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -203,19 +203,19 @@ def history():
 @app.route("/datacenter/status", methods=["GET"])
 def status():
     """
-    Donne l’état général du système
+    Returns the general status of the system
     ---
     tags:
-      - Système
+      - System
     responses:
       200:
-        description: Statut actuel du datacenter
+        description: Current datacenter status
     """
-    return jsonify({"status": "Système opérationnel", "last_backup": time.time()}), 200
+    return jsonify({"status": "System operational", "last_backup": time.time()}), 200
 
 
 # ============================
-# LANCEMENT SERVEUR
+# SERVER LAUNCH
 # ============================
 
 if __name__ == "__main__":
