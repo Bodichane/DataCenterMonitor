@@ -1,1 +1,1 @@
-{"id": "7fd892547f7401d3450305f24443c693", "server_id": 1, "temperature": 45.0, "timestamp": 1759968025.9488385}
+{"server_id": 1, "temperature": 45, "humidity": 50, "airflow": 3, "smoke_detected": false, "water_leak": false, "power_status": "OK", "id": "9d29ec15ecb2a5fa45bc0c760427461f", "timestamp": 1760019746.9959345}
