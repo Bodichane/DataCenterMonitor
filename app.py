@@ -57,29 +57,39 @@ def check_integrity(expected_hash, filename=JSON_PATH):
     return current_hash == expected_hash
 
 def init_db():
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS environment
-                 (id TEXT, server_id INTEGER, temperature REAL, humidity REAL,
-                  airflow REAL, smoke_detected BOOLEAN, water_leak BOOLEAN,
-                  power_status TEXT, timestamp REAL)''')
-    conn.commit()
-    conn.close()
+    try:
+        os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS environment
+                     (id TEXT, server_id INTEGER, temperature REAL, humidity REAL,
+                      airflow REAL, smoke_detected BOOLEAN, water_leak BOOLEAN,
+                      power_status TEXT, timestamp REAL)''')
+        conn.commit()
+    except sqlite3.Error as e:
+        logger.error(f"Database initialization error: {e}")
+        raise
+    finally:
+        conn.close()
 
 def seed_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT COUNT(*) FROM environment")
-    count = c.fetchone()[0]
-    if count < 10:
-        for i in range(10 - count):
-            timestamp = time.time() - i * 60
-            id = hashlib.md5(str(timestamp).encode()).hexdigest()
-            c.execute("INSERT INTO environment (id, server_id, temperature, humidity, airflow, smoke_detected, water_leak, power_status, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                      (id, 1, random.uniform(20, 40), random.uniform(30, 60), random.uniform(1, 5), False, False, "OK", timestamp))
-        conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("SELECT COUNT(*) FROM environment")
+        count = c.fetchone()[0]
+        if count < 10:
+            for i in range(10 - count):
+                timestamp = time.time() - i * 60
+                id = hashlib.sha256(str(timestamp).encode()).hexdigest()
+                c.execute("INSERT INTO environment (id, server_id, temperature, humidity, airflow, smoke_detected, water_leak, power_status, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                          (id, 1, random.uniform(20, 40), random.uniform(30, 60), random.uniform(1, 5), False, False, "OK", timestamp))
+            conn.commit()
+    except sqlite3.Error as e:
+        logger.error(f"Database seeding error: {e}")
+        raise
+    finally:
+        conn.close()
 
 def detect_anomaly(env):
     """Simple rule-based anomaly detection"""
@@ -148,6 +158,8 @@ def monitor():
         description: Data successfully recorded
       400:
         description: Environmental anomaly detected
+      500:
+        description: Database error
     """
     data = request.get_json(force=True)
     required_keys = ["server_id", "temperature", "humidity", "airflow", "smoke_detected", "water_leak", "power_status"]
@@ -175,14 +187,19 @@ def monitor():
         return jsonify({"error": "Environmental anomaly detected!"}), 400
 
     timestamp = time.time()
-    env_id = hashlib.md5(str(timestamp).encode()).hexdigest()
+    env_id = hashlib.sha256(str(timestamp).encode()).hexdigest()
 
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("INSERT INTO environment (id, server_id, temperature, humidity, airflow, smoke_detected, water_leak, power_status, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-              (env_id, env["server_id"], env["temperature"], env["humidity"], env["airflow"], env["smoke_detected"], env["water_leak"], env["power_status"], timestamp))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("INSERT INTO environment (id, server_id, temperature, humidity, airflow, smoke_detected, water_leak, power_status, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                  (env_id, env["server_id"], env["temperature"], env["humidity"], env["airflow"], env["smoke_detected"], env["water_leak"], env["power_status"], timestamp))
+        conn.commit()
+    except sqlite3.Error as e:
+        logger.error(f"Database insertion error: {e}")
+        return jsonify({"error": "Database error occurred"}), 500
+    finally:
+        conn.close()
 
     result = env.copy()
     result.update({"id": env_id, "timestamp": timestamp})
@@ -202,12 +219,19 @@ def history():
     responses:
       200:
         description: Recent measurements list
+      500:
+        description: Database error
     """
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT id, server_id, temperature, humidity, airflow, smoke_detected, water_leak, power_status, timestamp FROM environment ORDER BY timestamp DESC LIMIT 10")
-    rows = c.fetchall()
-    conn.close()
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("SELECT id, server_id, temperature, humidity, airflow, smoke_detected, water_leak, power_status, timestamp FROM environment ORDER BY timestamp DESC LIMIT 10")
+        rows = c.fetchall()
+    except sqlite3.Error as e:
+        logger.error(f"Database query error: {e}")
+        return jsonify({"error": "Database error occurred"}), 500
+    finally:
+        conn.close()
 
     data = [
         {
@@ -237,11 +261,11 @@ def status():
       200:
         description: Current status of the datacenter
     """
-    return jsonify({"status": "Operational", "last_backup": time.time()}), 200
+    return jsonify({"status": "Operational", "last_updated": time.time()}), 200
 
 # ============================
 # SERVER LAUNCH
 # ============================
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8080)

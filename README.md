@@ -1,14 +1,14 @@
 # 🧠 DataCenter Monitor
 
 **DataCenter Monitor** is a Flask API that monitors the environmental status of servers in a data center.  
-It detects anomalies using an **Isolation Forest** model, stores data in an **SQLite** database, and provides interactive documentation via **Swagger UI**.
+It detects anomalies using an **rule-based thresholds**, stores data in an **SQLite** database, and provides interactive documentation via **Swagger UI**.
 
 ---
 
 ## 🚀 Features
 
 - **Complete REST API** with Flask  
-- **Anomaly detection** via `scikit-learn`  
+- **Anomaly detection** via  rule-based thresholds  
 - Integrated **SQLite database**  
 - **Data integrity** verified by SHA-256 fingerprint  
 - **Swagger UI** for easy endpoint testing  

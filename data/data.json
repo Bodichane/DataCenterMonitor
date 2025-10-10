@@ -1,1 +1,1 @@
-{"server_id": 1, "temperature": 45, "humidity": 50, "airflow": 3, "smoke_detected": false, "water_leak": false, "power_status": "OK", "id": "9d29ec15ecb2a5fa45bc0c760427461f", "timestamp": 1760019746.9959345}
+{"server_id": 1, "temperature": 30, "humidity": 50, "airflow": 3, "smoke_detected": false, "water_leak": false, "power_status": "OK", "id": "cf474f3f7560873aa5f9cbaa126b504b43070583f6ed0b3a0616a10438c338fc", "timestamp": 1760058617.3582141}
