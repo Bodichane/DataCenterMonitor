@@ -128,7 +128,7 @@ Returns general system health:
   "last_backup": 1699999999
 }
 ```
-Notes
+### Notes
 
 Use Swagger UI to easily test all endpoints without writing custom scripts.
 
