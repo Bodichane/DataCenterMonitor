@@ -183,7 +183,7 @@ def monitor():
 
     # Detect anomalies
     if detect_anomaly(env):
-        logger.warning(f"⚠️ Anomaly detected for server {env['server_id']}: {env}")
+        logger.warning(f"Anomaly detected for server {env['server_id']}: {env}")
         return jsonify({"error": "Environmental anomaly detected!"}), 400
 
     timestamp = time.time()
