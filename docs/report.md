@@ -120,15 +120,15 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 Below are identified negative scenarios that may affect the cyberimmune data center system. Each scenario is linked to a risk mitigation strategy.
 
-| **ID** | **Description** | **Impact** | **Mitigation Strategy** |
-|--------|------------------|-------------|--------------------------|
-| NS-1 | Temperature sensor reports incorrect data (false overheating) | Medium | Cross-validate readings with humidity and airflow sensors before alerting |
-| NS-2 | Database integrity compromised (corrupted or tampered data) | High | Apply SHA-256 integrity verification before each data query or insertion |
-| NS-3 | Unauthorized access to the API | High | Enforce authentication (API key / token) and IP restrictions |
-| NS-4 | Network or Docker container failure | Medium | Use container orchestration with automatic restart and persistent volumes |
-| NS-5 | Power outage causes service interruption | Medium | Implement UPS monitoring and auto-recovery procedure after reboot |
-| NS-6 | Communication failure with sensor module | High | Retry requests with exponential backoff and log all failures |
-| NS-7 | Alert module fails to send notifications | Medium | Store alerts locally and retry sending upon network restoration |
+| ID   | Description                                | Impact | Mitigation                                   |
+| ---- | ------------------------------------------ | ------ | -------------------------------------------- |
+| NS-1 | Temperature sensor sends false high values | Medium | Validate readings and compare averages       |
+| NS-2 | Database corruption or hash mismatch       | High   | Integrity verification before each query     |
+| NS-3 | Unauthorized API access                    | High   | Require authentication and IP restriction    |
+| NS-4 | Data loss during Docker restart            | Medium | Persist volumes and create backups           |
+| NS-5 | Power outage interrupts measurement        | Medium | Reboot recovery and status resynchronization |
+| NS-6 | Flood detection false positive             | Low    | Cross-check with humidity and airflow        |
+
 
 ---
 
@@ -136,15 +136,15 @@ Below are identified negative scenarios that may affect the cyberimmune data cen
 
 The architecture is decomposed into modular components, each responsible for a specific functionality. This separation allows for fault isolation, simplified maintenance, and better security management.
 
-| **Module** | **Responsibilities** |
-|-------------|----------------------|
-| **Monitoring Controller (Flask API)** | Central node managing data acquisition, anomaly detection, and system coordination. |
-| **Temperature & Humidity Sensor Layer** | Collects physical environment data and transmits it to the controller. |
-| **Power & Safety Module** | Monitors power input, detects anomalies, and triggers safety shutdowns. |
-| **Database Manager (SQLite)** | Handles data storage, querying, and backup operations. |
-| **Integrity Verifier** | Validates data consistency through SHA-256 hash comparison before storing or serving records. |
-| **Alert Manager** | Sends alerts to the administrator (email/logs) upon anomaly detection. |
-| **Docker Environment** | Provides isolation, portability, and recovery mechanisms for each service. |
+| Module                                | Description                   | Responsibilities                                                       | Interaction                               |
+| ------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- | ----------------------------------------- |
+| **Flask API / Monitoring Controller** | Central coordination layer    | • Handles requests, orchestrates modules, manages detection and alerts | Communicates with sensors, DB, and alerts |
+| **Temp Control**                      | Temperature management module | • Reads temperature, checks thresholds                                 | Responds to Flask API                     |
+| **Humidity & Air**                    | Controls humidity and airflow | • Ensures proper environmental flow and humidity                       | Works under Flask API                     |
+| **Power Monitor**                     | Power stability tracking      | • Detects power faults or instability                                  | Sends results to Flask API                |
+| **SQLite Database**                   | Local data store              | • Saves valid readings only, ensures data integrity                    | Receives only validated data              |
+| **Alert & Logs**                      | Logging and alerts module     | • Logs anomalies and sends notifications                               | Triggered by Flask API                    |
+
 
 ---
 
