@@ -1,5 +1,3 @@
-# Report on the Implementation of the Task
-
 ## "Cyberimmune Data Center Environmental Monitoring System"
 
 ---
@@ -53,19 +51,17 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 ## 5. System Architecture
 
-### 5.1 Context Diagram
-
 **Actors:**
 - **System Administrator:** Interacts with the Swagger UI to view status and trigger monitoring.
 - **Flask API Server:** Central controller handling requests and data processing.
 - **Physical Sensors:** Provide real-time environmental measurements.
 - **SQLite Database:** Stores validated and verified measurements.
 
-### 5.2 General Architecture Diagram
-
-
+### General Diagram System
 ![General diagram system](../docs/images/general_diagram.png)
 
+### Sequence Diagram System
+![Sequence diagram system](../docs/images/sequence_diagram.png)
 ---
 
 ## 6. Basic System Operation Scenario
