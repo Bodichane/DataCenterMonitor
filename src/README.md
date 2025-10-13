@@ -17,7 +17,8 @@ It detects anomalies using an **rule-based thresholds**, stores data in an **SQL
 
 ---
 
-General Diagram System
+## General Diagram System
+
 ![General diagram system](../docs/images/general_diagram.png)
 
 ---
