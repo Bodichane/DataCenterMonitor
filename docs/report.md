@@ -120,14 +120,15 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 Below are identified negative scenarios that may affect the cyberimmune data center system. Each scenario is linked to a risk mitigation strategy.
 
-| ID   | Description                                | Impact | Mitigation                                   |
-| ---- | ------------------------------------------ | ------ | -------------------------------------------- |
-| NS-1 | Temperature sensor sends false high values | Medium | Validate readings and compare averages       |
-| NS-2 | Database corruption or hash mismatch       | High   | Integrity verification before each query     |
-| NS-3 | Unauthorized API access                    | High   | Require authentication and IP restriction    |
-| NS-4 | Data loss during Docker restart            | Medium | Persist volumes and create backups           |
-| NS-5 | Power outage interrupts measurement        | Medium | Reboot recovery and status resynchronization |
-| NS-6 | Flood detection false positive             | Low    | Cross-check with humidity and airflow        |
+| ID   | Description                                        | Impact | Mitigation                                            | 
+| ---- | -------------------------------------------------- | ------ | ----------------------------------------------------- | 
+| NS-1 | Temperature sensor sends false high values         | Medium | Validate readings and compare averages                | 
+| NS-2 | Humidity sensor spoofing / false readings          | Medium | Cross-check with other sensors (temperature, airflow) | 
+| NS-3 | Database corruption or hash mismatch               | High   | Integrity verification before each query              | 
+| NS-4 | Power outage or fluctuation interrupts measurement | Medium | Reboot recovery and status resynchronization          | 
+| NS-5 | Alert tampering or suppression                     | High   | Signed alerts, log verification                       | 
+| NS-6 | Unauthorized administrator access                  | High   | Require authentication, IP restriction, multi-factor  | 
+
 
 ### NS-1 – False High Temperature Reading
 
