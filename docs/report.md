@@ -70,10 +70,12 @@ The system must detect abnormal environmental conditions that may threaten equip
 ## 5. System Architecture
 
 **Actors:**
-- **System Administrator:** Interacts with the Swagger UI to view status and trigger monitoring.
-- **Flask API Server:** Central controller handling requests and data processing.
-- **Physical Sensors:** Provide real-time environmental measurements.
-- **SQLite Database:** Stores validated and verified measurements.
+- **System Administrator** – interacts via Swagger UI to monitor and control the data center environment.
+- **Monitoring Controller (Flask API)** – central unit processing all data and coordinating modules.
+- **Physical Sensors** – measure temperature, humidity, airflow, and smoke.
+- **Power & Safety Module** – monitors power and emergency signals.
+- **Alert Manager** – sends alerts in case of anomaly detection.
+- **SQLite Database** – stores validated sensor readings and logs.
 
 ### General Diagram System
 ![General diagram system](../docs/images/general_diagram.png)
@@ -102,21 +104,15 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 ## 7. Data Center Module Architecture
 
-### Components
-
-### 🧩 Data Center Module Architecture
-
-The data center architecture consists of interconnected modules managed by the central **Flask API / Monitoring Controller**, ensuring reliability, data integrity, and automated anomaly detection across all subsystems.
-
 | **Component** | **Description** |
-|----------------|----------------|
-| **Flask API / Monitoring Controller** | Central processing unit managing API calls, anomaly detection, and coordination between all subsystems. |
-| **Temperature Control Module** | Monitors and regulates temperature levels using environmental sensors. |
-| **Humidity & Air Module** | Tracks humidity and airflow consistency to maintain optimal greenhouse conditions. |
-| **Power Monitor** | Detects power fluctuations and ensures electrical stability across modules. |
-| **SQLite Database** | Stores validated sensor data, configuration parameters, and anomaly logs. |
-| **Alert & Logs** | Handles alert notifications, error tracking, and system event logging. |
-| **Docker Network** | Provides a secure, isolated, and portable deployment environment for the entire system. |
+|----------------|-----------------|
+| **Monitoring Controller (Flask API)** | Central logic handling data requests, anomaly detection, and alert triggering. |
+| **Sensor Interface** | Connects to environmental sensors (temperature, humidity, airflow, smoke). |
+| **Power & Safety Module** | Monitors electrical status and detects emergency conditions (fire, outage). |
+| **Database Layer (SQLite)** | Stores validated measurements and historical logs. |
+| **Integrity Module** | Validates the consistency of stored data using SHA-256 hashing. |
+| **Alert Manager** | Sends alerts to the administrator when anomalies are detected. |
+| **Swagger UI** | User interface for monitoring and API interaction. |
 
 ---
 
@@ -124,15 +120,38 @@ The data center architecture consists of interconnected modules managed by the c
 
 Below are identified negative scenarios that may affect the cyberimmune data center system. Each scenario is linked to a risk mitigation strategy.
 
-| **ID** | **Description** | **Impact** | **Mitigation Strategy** |
-|--------|------------------|-------------|--------------------------|
-| NS-1 | Temperature sensor reports incorrect data (false overheating) | Medium | Cross-validate readings with humidity and airflow sensors before alerting |
-| NS-2 | Database integrity compromised (corrupted or tampered data) | High | Apply SHA-256 integrity verification before each data query or insertion |
-| NS-3 | Unauthorized access to the API | High | Enforce authentication (API key / token) and IP restrictions |
-| NS-4 | Network or Docker container failure | Medium | Use container orchestration with automatic restart and persistent volumes |
-| NS-5 | Power outage causes service interruption | Medium | Implement UPS monitoring and auto-recovery procedure after reboot |
-| NS-6 | Communication failure with sensor module | High | Retry requests with exponential backoff and log all failures |
-| NS-7 | Alert module fails to send notifications | Medium | Store alerts locally and retry sending upon network restoration |
+| ID   | Description                                | Impact | Mitigation                                   |
+| ---- | ------------------------------------------ | ------ | -------------------------------------------- |
+| NS-1 | Temperature sensor sends false high values | Medium | Validate readings and compare averages       |
+| NS-2 | Database corruption or hash mismatch       | High   | Integrity verification before each query     |
+| NS-3 | Unauthorized API access                    | High   | Require authentication and IP restriction    |
+| NS-4 | Data loss during Docker restart            | Medium | Persist volumes and create backups           |
+| NS-5 | Power outage interrupts measurement        | Medium | Reboot recovery and status resynchronization |
+| NS-6 | Flood detection false positive             | Low    | Cross-check with humidity and airflow        |
+
+### NS-1 – False High Temperature Reading
+
+![ns-1](../docs/images/ns-1.png)
+
+NS-2 — Humidity Sensor Spoofing
+
+![ns-2](../docs/images/ns-2.png)
+
+NS-3 — Database Corruption Attack
+
+![ns-3](../docs/images/ns-3.png)
+
+NS-4 — Power Fluctuation Injection
+
+![ns-4](../docs/images/ns-4.png)
+
+NS-5 — Alert Tampering
+
+![ns-5](../docs/images/ns-5.png)
+
+NS-6 — Unauthorized Admin Access
+
+![ns-6](../docs/images/ns-6.png)
 
 ---
 
@@ -140,25 +159,27 @@ Below are identified negative scenarios that may affect the cyberimmune data cen
 
 The architecture is decomposed into modular components, each responsible for a specific functionality. This separation allows for fault isolation, simplified maintenance, and better security management.
 
-| **Module** | **Responsibilities** |
-|-------------|----------------------|
-| **Monitoring Controller (Flask API)** | Central node managing data acquisition, anomaly detection, and system coordination. |
-| **Temperature & Humidity Sensor Layer** | Collects physical environment data and transmits it to the controller. |
-| **Power & Safety Module** | Monitors power input, detects anomalies, and triggers safety shutdowns. |
-| **Database Manager (SQLite)** | Handles data storage, querying, and backup operations. |
-| **Integrity Verifier** | Validates data consistency through SHA-256 hash comparison before storing or serving records. |
-| **Alert Manager** | Sends alerts to the administrator (email/logs) upon anomaly detection. |
-| **Docker Environment** | Provides isolation, portability, and recovery mechanisms for each service. |
+| Module                                | Description                   | Responsibilities                                                       | Interaction                               |
+| ------------------------------------- | ----------------------------- | ---------------------------------------------------------------------- | ----------------------------------------- |
+| **Flask API / Monitoring Controller** | Central coordination layer    | • Handles requests, orchestrates modules, manages detection and alerts | Communicates with sensors, DB, and alerts |
+| **Temp Control**                      | Temperature management module | • Reads temperature, checks thresholds                                 | Responds to Flask API                     |
+| **Humidity & Air**                    | Controls humidity and airflow | • Ensures proper environmental flow and humidity                       | Works under Flask API                     |
+| **Power Monitor**                     | Power stability tracking      | • Detects power faults or instability                                  | Sends results to Flask API                |
+| **SQLite Database**                   | Local data store              | • Saves valid readings only, ensures data integrity                    | Receives only validated data              |
+| **Alert & Logs**                      | Logging and alerts module     | • Logs anomalies and sends notifications                               | Triggered by Flask API                    |
+
 
 ---
 
 ## 10. Base Scenario for Decomposed Architecture
 
-1. Administrator sends environmental data through Swagger UI.
-2. Flask API validates and forwards it to the integrity checker.
-3. If integrity passes, data is stored in the database.
-4. In case of anomaly, the API blocks storage and returns an alert.
-5. Admin can consult system logs or history.
+1. Administrator triggers monitoring via Swagger UI.
+2. Flask API (Monitoring Controller) requests readings from sensors and power module.
+3. Data is sent to the Integrity Checker for validation.
+4. If integrity passes and values are within limits, data is stored in the database.
+5. If an anomaly is detected (e.g., overheating, power fault), the Alert Manager sends a notification and data is not stored.
+6. Administrator can view logs and alerts from Swagger UI.
+
 
 ---
 
