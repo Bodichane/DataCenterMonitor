@@ -63,8 +63,8 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 ### 5.2 General Architecture Diagram
 
-```
-*(Insert your architecture diagram — e.g., `/docs/images/general-diagram.png`)*
+
+*/docs/images/general-diagram.png`)*
 
 ---
 
