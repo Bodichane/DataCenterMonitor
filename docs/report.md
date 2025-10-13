@@ -1,6 +1,22 @@
-# Report on the Implementation of the Task
+## Cyberimmune Data Center Environmental Monitoring System
 
-## "Cyberimmune Data Center Environmental Monitoring System"
+---
+
+## Table of Contents
+- [1. Problem Statement](#1-problem-statement)
+- [2. Values, Damages, and Unacceptable Events](#2-values-damages-and-unacceptable-events)
+- [3. Known Constraints and Initial Conditions](#3-known-constraints-and-initial-conditions)
+- [4. Security Goals and Assumptions (SGA)](#4-security-goals-and-assumptions-sga)
+- [5. System Architecture](#5-system-architecture)
+- [6. Basic System Operation Scenario](#6-basic-system-operation-scenario)
+- [7. Data Center Module Architecture](#7-data-center-module-architecture)
+- [8. Negative Scenarios (Failure or Attack Cases)](#8-negative-scenarios-failure-or-attack-cases)
+- [9. Architectural Decomposition](#9-architectural-decomposition)
+- [10. Base Scenario for Decomposed Architecture](#10-base-scenario-for-decomposed-architecture)
+- [11. Architecture Policy](#11-architecture-policy)
+- [12. Quality Evaluation by Domain](#12-quality-evaluation-by-domain)
+- [13. Trust Level Justification](#13-trust-level-justification)
+- [14. Negative Scenario Validation](#14-negative-scenario-validation)
 
 ---
 
@@ -53,19 +69,17 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 ## 5. System Architecture
 
-### 5.1 Context Diagram
-
 **Actors:**
 - **System Administrator:** Interacts with the Swagger UI to view status and trigger monitoring.
 - **Flask API Server:** Central controller handling requests and data processing.
 - **Physical Sensors:** Provide real-time environmental measurements.
 - **SQLite Database:** Stores validated and verified measurements.
 
-### 5.2 General Architecture Diagram
+### General Diagram System
+![General diagram system](../docs/images/general_diagram.png)
 
-```
-*(Insert your architecture diagram — e.g., `/docs/images/general-diagram.png`)*
-
+### Sequence Diagram System
+![Sequence diagram system](../docs/images/sequence_diagram.png)
 ---
 
 ## 6. Basic System Operation Scenario
