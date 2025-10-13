@@ -129,29 +129,29 @@ Below are identified negative scenarios that may affect the cyberimmune data cen
 | NS-5 | Power outage interrupts measurement        | Medium | Reboot recovery and status resynchronization |
 | NS-6 | Flood detection false positive             | Low    | Cross-check with humidity and airflow        |
 
-## 10. Sequence Diagrams for Negative Scenarios
-
----
-
 ### NS-1 – False High Temperature Reading
-```plantuml
-@startuml
-title NS-1 – False High Temperature Reading
 
-actor Admin
-participant "Flask API / Monitoring Controller" as API
-participant "Temp Control" as Temp
-participant "Alert & Logs" as Alert
-database "SQLite Database" as DB
+![ns-1](../docs/images/ns-1.png)
 
-Admin -> API : Send environmental data (temperature)
-API -> Temp : Validate temperature
-Temp --> API : Return abnormally high value
-API -> API : Detect anomaly (threshold exceeded)
-API -> Alert : Log anomaly and notify admin
-Alert --> API : Log confirmed
-API --> Admin : HTTP 400 {"error": "Temperature anomaly detected"}
-@enduml
+NS-2 — Humidity Sensor Spoofing
+
+![ns-2](../docs/images/ns-2.png)
+
+NS-3 — Database Corruption Attack
+
+![ns-3](../docs/images/ns-3.png)
+
+NS-4 — Power Fluctuation Injection
+
+![ns-4](../docs/images/ns-4.png)
+
+NS-5 — Alert Tampering
+
+![ns-5](../docs/images/ns-5.png)
+
+NS-6 — Unauthorized Admin Access
+
+![ns-6](../docs/images/ns-6.png)
 
 ---
 
