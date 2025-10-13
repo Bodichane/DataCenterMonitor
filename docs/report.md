@@ -104,13 +104,20 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 ### Components
 
-| Component | Description |
-|------------|--------------|
-| **Flask API** | Core module managing API requests, anomaly detection, and data flow |
-| **Sensor Interface** | Represents physical or simulated sensors providing environment data |
-| **Database Layer** | SQLite storage for historical data and logs |
-| **Integrity Module** | Uses SHA-256 hashes to ensure data consistency |
-| **Swagger UI** | Documentation and testing interface for API endpoints |
+### 🧩 Data Center Module Architecture
+
+The data center architecture consists of interconnected modules managed by the central **Flask API / Monitoring Controller**, ensuring reliability, data integrity, and automated anomaly detection across all subsystems.
+
+| **Component** | **Description** |
+|----------------|----------------|
+| **Flask API / Monitoring Controller** | Central processing unit managing API calls, anomaly detection, and coordination between all subsystems. |
+| **Temperature Control Module** | Monitors and regulates temperature levels using environmental sensors. |
+| **Humidity & Air Module** | Tracks humidity and airflow consistency to maintain optimal greenhouse conditions. |
+| **Power Monitor** | Detects power fluctuations and ensures electrical stability across modules. |
+| **SQLite Database** | Stores validated sensor data, configuration parameters, and anomaly logs. |
+| **Alert & Logs** | Handles alert notifications, error tracking, and system event logging. |
+| **Docker Network** | Provides a secure, isolated, and portable deployment environment for the entire system. |
+
 
 ---
 
