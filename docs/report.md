@@ -64,7 +64,7 @@ The system must detect abnormal environmental conditions that may threaten equip
 ### 5.2 General Architecture Diagram
 
 
-*(General diagram system — `/docs/images/general_diagram.png`)*
+![General diagram system](docs/images/sequence-diagram.png)
 
 ---
 
