@@ -19,12 +19,12 @@ It detects anomalies using an **rule-based thresholds**, stores data in an **SQL
 
 ## General Diagram System
 
-![General diagram system](../docs/images/general_diagram.png)
+![General diagram system](docs/images/general_diagram.png)
 
 ---
 
 ## Report
-[See the report](../docs/report.md)
+[See the report](docs/report.md)
 
 ---
 
