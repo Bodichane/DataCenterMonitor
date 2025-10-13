@@ -70,10 +70,12 @@ The system must detect abnormal environmental conditions that may threaten equip
 ## 5. System Architecture
 
 **Actors:**
-- **System Administrator:** Interacts with the Swagger UI to view status and trigger monitoring.
-- **Flask API Server:** Central controller handling requests and data processing.
-- **Physical Sensors:** Provide real-time environmental measurements.
-- **SQLite Database:** Stores validated and verified measurements.
+- **System Administrator** – interacts via Swagger UI to monitor and control the data center environment.
+- **Monitoring Controller (Flask API)** – central unit processing all data and coordinating modules.
+- **Physical Sensors** – measure temperature, humidity, airflow, and smoke.
+- **Power & Safety Module** – monitors power and emergency signals.
+- **Alert Manager** – sends alerts in case of anomaly detection.
+- **SQLite Database** – stores validated sensor readings and logs.
 
 ### General Diagram System
 ![General diagram system](../docs/images/general_diagram.png)
@@ -102,21 +104,15 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 ## 7. Data Center Module Architecture
 
-### Components
-
-### 🧩 Data Center Module Architecture
-
-The data center architecture consists of interconnected modules managed by the central **Flask API / Monitoring Controller**, ensuring reliability, data integrity, and automated anomaly detection across all subsystems.
-
 | **Component** | **Description** |
-|----------------|----------------|
-| **Flask API / Monitoring Controller** | Central processing unit managing API calls, anomaly detection, and coordination between all subsystems. |
-| **Temperature Control Module** | Monitors and regulates temperature levels using environmental sensors. |
-| **Humidity & Air Module** | Tracks humidity and airflow consistency to maintain optimal greenhouse conditions. |
-| **Power Monitor** | Detects power fluctuations and ensures electrical stability across modules. |
-| **SQLite Database** | Stores validated sensor data, configuration parameters, and anomaly logs. |
-| **Alert & Logs** | Handles alert notifications, error tracking, and system event logging. |
-| **Docker Network** | Provides a secure, isolated, and portable deployment environment for the entire system. |
+|----------------|-----------------|
+| **Monitoring Controller (Flask API)** | Central logic handling data requests, anomaly detection, and alert triggering. |
+| **Sensor Interface** | Connects to environmental sensors (temperature, humidity, airflow, smoke). |
+| **Power & Safety Module** | Monitors electrical status and detects emergency conditions (fire, outage). |
+| **Database Layer (SQLite)** | Stores validated measurements and historical logs. |
+| **Integrity Module** | Validates the consistency of stored data using SHA-256 hashing. |
+| **Alert Manager** | Sends alerts to the administrator when anomalies are detected. |
+| **Swagger UI** | User interface for monitoring and API interaction. |
 
 ---
 
@@ -154,11 +150,13 @@ The architecture is decomposed into modular components, each responsible for a s
 
 ## 10. Base Scenario for Decomposed Architecture
 
-1. Administrator sends environmental data through Swagger UI.
-2. Flask API validates and forwards it to the integrity checker.
-3. If integrity passes, data is stored in the database.
-4. In case of anomaly, the API blocks storage and returns an alert.
-5. Admin can consult system logs or history.
+1. Administrator triggers monitoring via Swagger UI.
+2. Flask API (Monitoring Controller) requests readings from sensors and power module.
+3. Data is sent to the Integrity Checker for validation.
+4. If integrity passes and values are within limits, data is stored in the database.
+5. If an anomaly is detected (e.g., overheating, power fault), the Alert Manager sends a notification and data is not stored.
+6. Administrator can view logs and alerts from Swagger UI.
+
 
 ---
 
