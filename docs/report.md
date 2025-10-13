@@ -1,4 +1,4 @@
-## "Cyberimmune Data Center Environmental Monitoring System"
+## Cyberimmune Data Center Environmental Monitoring System
 
 ---
 
