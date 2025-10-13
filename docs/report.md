@@ -80,6 +80,13 @@ The system must detect abnormal environmental conditions that may threaten equip
 
 ### Sequence Diagram System
 ![Sequence diagram system](../docs/images/sequence_diagram.png)
+
+### Data Center Architecture
+![Data center architecture](../docs/images/datacenter_architecture.png)
+
+### Basic scenario for data center operation
+![Basic scenario for data center operation](../docs/images/datacenter_operation.png)
+
 ---
 
 ## 6. Basic System Operation Scenario
