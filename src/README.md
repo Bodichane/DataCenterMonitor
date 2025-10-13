@@ -24,7 +24,7 @@ It detects anomalies using an **rule-based thresholds**, stores data in an **SQL
 ---
 
 ## Report
-[See the report](docs/report.md)
+[See the report](../docs/report.md)
 
 ---
 
