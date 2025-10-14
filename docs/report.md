@@ -215,20 +215,6 @@ The architecture is decomposed into modular components, each responsible for a s
 
 ---
 
-## 14. Negative Scenario Validation
-
-### NSV-1: Temperature Anomaly Simulation
-- Input: `{"temperature": 60}`
-- Output: HTTP 400 – `{"error": "Environmental anomaly detected!"}`
-- Validation: System reacts correctly.
-
-### NSV-2: Normal Environment
-- Input: `{"temperature": 45, "humidity": 50, "airflow": 3}`
-- Output: HTTP 200 – normal state stored in database.
-- Validation: Data is recorded only if valid.
-
----
-
 **Conclusion:**  
 The Data Center Monitoring System successfully implements environmental anomaly detection, data integrity verification, and secure data recording using a Flask-based architecture. The system is modular, secure, and extensible for future cyberimmunity features.
 
