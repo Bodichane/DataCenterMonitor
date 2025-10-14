@@ -154,10 +154,9 @@ Returns general system health:
 ```
 ### Notes
 
-Use Swagger UI to easily test all endpoints without writing custom scripts.
-
-Docker ensures a consistent environment for anyone cloning the repository.
-If http://localhost:8080/apidocs does not load, check the container logs with:
+- Use Swagger UI to easily test all endpoints without writing custom scripts.
+- Docker ensures a consistent environment for anyone cloning the repository.
+- If http://localhost:8080/apidocs does not load, check the container logs with:
 ```bash
 docker logs datacenter_monitor
 ```
