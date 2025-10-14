@@ -41,7 +41,7 @@ cd DataCenterMonitor
 docker-compose up --build -d
 ```
 
-Create the */data* directory to store data
+Create the `/data` directory to store data
 ```bash
 mkdir data
 icacls "data" /grant Everyone:F
