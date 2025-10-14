@@ -92,20 +92,21 @@ def seed_db():
         conn.close()
 
 def detect_anomaly(env):
-    """Simple rule-based anomaly detection"""
+    """Return a list of anomaly types detected, empty if none"""
+    anomalies = []
     if env["temperature"] > 50:
-        return True
+        anomalies.append("High Temperature")
     if env["humidity"] > 80:
-        return True
+        anomalies.append("High Humidity")
     if env["airflow"] < 1:
-        return True
+        anomalies.append("Low Airflow")
     if env["smoke_detected"]:
-        return True
+        anomalies.append("Smoke Detected")
     if env["water_leak"]:
-        return True
+        anomalies.append("Water Leak")
     if env["power_status"] != "OK":
-        return True
-    return False
+        anomalies.append(f"Power Status: {env['power_status']}")
+    return anomalies
 
 # ============================
 # INITIALIZATION
@@ -182,9 +183,11 @@ def monitor():
     logger.info(f"Received environment data: {env}")
 
     # Detect anomalies
-    if detect_anomaly(env):
-        logger.warning(f"Anomaly detected for server {env['server_id']}: {env}")
-        return jsonify({"error": "Environmental anomaly detected!"}), 400
+    anomalies = detect_anomaly(env)
+    if anomalies:
+        anomaly_str = ", ".join(anomalies)
+        logger.warning(f"Anomalies detected for server {env['server_id']}: {anomaly_str}")
+        return jsonify({"error": f"Environmental anomalies detected: {anomaly_str}"}), 400
 
     timestamp = time.time()
     env_id = hashlib.sha256(str(timestamp).encode()).hexdigest()
