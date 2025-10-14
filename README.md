@@ -12,9 +12,17 @@ It detects anomalies using an **rule-based thresholds**, stores data in an **SQL
 - Integrated **SQLite database**  
 - **Data integrity** verified by SHA-256 fingerprint  
 - **Swagger UI** for easy endpoint testing  
-- **Monitoring multiple environmental factors**: temperature, humidity, airflow, smoke, water leak, power status  
+- **Monitoring multiple environmental factors**: temperature, humidity, airflow, smoke detection, water leak, and power status
+- **Automatic database seeding** with initial data
 - **Simplified deployment with Docker**
 
+---
+
+## Prerequisites
+- Docker
+- Git
+- A web browser (e.g., Chrome, Firefox)
+  
 ---
 
 ## General Diagram System
@@ -36,15 +44,14 @@ It detects anomalies using an **rule-based thresholds**, stores data in an **SQL
 git clone https://github.com/Bodichane/DataCenterMonitor.git
 cd DataCenterMonitor
 ```
-#### 2️⃣ Build the Docker image
-```bash
-docker-compose up --build -d
-```
-
-Create the `/data` directory to store data
+#### 2️⃣ Create the `/data` directory 
 ```bash
 mkdir data
 icacls "data" /grant Everyone:F
+```
+#### 3️⃣ Build the Docker image
+```bash
+docker-compose up --build -d
 ```
 ---
 
@@ -149,6 +156,12 @@ Returns general system health:
 
 Use Swagger UI to easily test all endpoints without writing custom scripts.
 
-The system simulates measurements if some parameters are not provided.
-
 Docker ensures a consistent environment for anyone cloning the repository.
+If http://localhost:8080/apidocs does not load, check the container logs with:
+```bash
+docker logs datacenter_monitor
+```
+Ensure the container is running with:
+```bash
+docker ps
+```
