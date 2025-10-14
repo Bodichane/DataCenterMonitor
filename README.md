@@ -38,9 +38,15 @@ cd DataCenterMonitor
 ```
 #### 2️⃣ Build the Docker image
 ```bash
-docker build -t datacentermonitor .
-docker run -p 8080:8080 datacentermonitor
+docker-compose up --build -d
 ```
+
+Create the */data* directory to store data
+```bash
+mkdir data
+icacls "data" /grant Everyone:F
+```
+---
 
 ## Usage
 
