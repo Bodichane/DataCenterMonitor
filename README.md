@@ -46,9 +46,11 @@ cd DataCenterMonitor
 ```
 #### 2️⃣ Create the `/data` directory 
 ```bash
-mkdir data
-icacls "data" /grant Everyone:F
+mkdir -p data
 ```
+
+> Sous Windows, si Docker ne peut pas écrire dans le dossier monté,
+> accordez les droits avec `icacls "data" /grant Everyone:F`.
 #### 3️⃣ Build the Docker image
 ```bash
 docker-compose up --build -d
@@ -93,7 +95,7 @@ Trigger temperature anomaly:
 
 Expected response:
 
-`{"error": "Anomaly detected!"}`
+`{"error": "Environmental anomalies detected: High Temperature"}`
 
 
 Trigger smoke or water anomaly:
@@ -164,3 +166,27 @@ Ensure the container is running with:
 ```bash
 docker ps
 ```
+
+---
+
+## Exécution locale (sans Docker)
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+
+L'API écoute alors sur `http://127.0.0.1:8080` (documentation : `/apidocs`).
+
+## Statut vérifié
+
+Démarrage de l'API et appels des endpoints vérifiés par exécution réelle sous
+Python 3.14 :
+
+| Endpoint | Requête | Réponse observée |
+|---|---|---|
+| `GET /datacenter/status` | — | `{"status":"Operational", ...}` |
+| `POST /datacenter/monitor` | température 45 (normale) | enregistrement complet stocké |
+| `POST /datacenter/monitor` | température 60 (anomalie) | `{"error":"Environmental anomalies detected: High Temperature"}` |
+| `GET /apidocs` | — | `HTTP 200` (Swagger UI) |
