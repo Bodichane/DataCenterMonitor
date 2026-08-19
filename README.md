@@ -49,8 +49,8 @@ cd DataCenterMonitor
 mkdir -p data
 ```
 
-> Sous Windows, si Docker ne peut pas écrire dans le dossier monté,
-> accordez les droits avec `icacls "data" /grant Everyone:F`.
+> On Windows, if Docker cannot write to the mounted folder, grant
+> access with `icacls "data" /grant Everyone:F`.
 #### 3️⃣ Build the Docker image
 ```bash
 docker-compose up --build -d
@@ -169,7 +169,7 @@ docker ps
 
 ---
 
-## Exécution locale (sans Docker)
+## Run locally (without Docker)
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -177,16 +177,16 @@ pip install -r requirements.txt
 python app.py
 ```
 
-L'API écoute alors sur `http://127.0.0.1:8080` (documentation : `/apidocs`).
+The API then listens on `http://127.0.0.1:8080` (docs: `/apidocs`).
 
-## Statut vérifié
+## Verified status
 
-Démarrage de l'API et appels des endpoints vérifiés par exécution réelle sous
-Python 3.14 :
+API startup and endpoint calls verified by actually running the app on
+Python 3.14:
 
-| Endpoint | Requête | Réponse observée |
+| Endpoint | Request | Observed response |
 |---|---|---|
 | `GET /datacenter/status` | — | `{"status":"Operational", ...}` |
-| `POST /datacenter/monitor` | température 45 (normale) | enregistrement complet stocké |
-| `POST /datacenter/monitor` | température 60 (anomalie) | `{"error":"Environmental anomalies detected: High Temperature"}` |
+| `POST /datacenter/monitor` | temperature 45 (normal) | full record stored |
+| `POST /datacenter/monitor` | temperature 60 (anomaly) | `{"error":"Environmental anomalies detected: High Temperature"}` |
 | `GET /apidocs` | — | `HTTP 200` (Swagger UI) |

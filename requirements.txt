@@ -1,5 +1,5 @@
-# Versions compatibles Python 3.12+ (les versions précédentes, flasgger 0.9.5 en
-# particulier, importaient le module `imp` retiré depuis Python 3.12).
+# Python 3.12+ compatible versions (earlier ones, flasgger 0.9.5 in particular,
+# imported the `imp` module removed since Python 3.12).
 flask>=3.0,<4.0
 flasgger>=0.9.7.1
 flask-cors>=4.0
